@@ -16,6 +16,8 @@ Player::Player(Side side) {
      * precalculating things, etc.) However, remember that you will only have
      * 30 seconds.
      */
+
+    std::cerr << "hi i need pts" << std:endl;
 }
 
 /*
