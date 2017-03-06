@@ -17,7 +17,7 @@ Player::Player(Side side) {
      * 30 seconds.
      */
 
-    std::cerr << "hi i need pts" << std:endl;
+    std::cerr << "hi i need pts" << std::endl;
 }
 
 /*
