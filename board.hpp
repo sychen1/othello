@@ -24,8 +24,11 @@ public:
 
     bool isDone();
     bool hasMoves(Side side);
+    
+    // Added
     vector<Move> allMoves(Side side);
     Move *randMove(Side side);
+
     bool checkMove(Move *m, Side side);
     void doMove(Move *m, Side side);
     int count(Side side);
