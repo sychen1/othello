@@ -46,6 +46,9 @@ Player::~Player() {
  *
  * The move returned must be legal; if there are no valid moves for your side,
  * return nullptr.
+ *
+ * NOTE: to select the method of making a move, it must be uncommented and the
+ * other two methods must be commented out.
  */
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
 
