@@ -17,7 +17,9 @@ Player::Player(Side side) {
      * 30 seconds.
      */
 
-    std::cerr << "hi i need pts" << std::endl;
+    gameboard = new Board();
+    s = side;
+
 }
 
 /*
