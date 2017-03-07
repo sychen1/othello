@@ -46,5 +46,11 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-    return nullptr;
+    Side other = (s == BLACK) ? WHITE : BLACK;
+    gameboard->doMove(opponentsMove, other);
+
+    Move *nextMove = gameboard->randMove(s);
+    gameboard->doMove(nextMove, s);
+
+    return nextMove;
 }
