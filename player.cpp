@@ -52,8 +52,8 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     //adds opponent's move to gameboard
     gameboard->doMove(opponentsMove, other);
 
-    return doMinimax();
-    //return heuristic();
+    //return doMinimax();
+    return heuristic();
     //return random();
 }
 
