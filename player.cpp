@@ -19,6 +19,7 @@ Player::Player(Side side) {
 
     gameboard = new Board();
     s = side;
+    other = (s == BLACK) ? WHITE : BLACK;
 
 }
 
@@ -50,9 +51,23 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * process the opponent's opponents move before calculating your own move
      */
 
-    Side other = (s == BLACK) ? WHITE : BLACK;
     gameboard->doMove(opponentsMove, other);
 
+    return heuristic();
+
+    /* does random move:
+    Move *nextMove = gameboard->randMove(s);
+
+    gameboard->doMove(nextMove, s);
+
+    return nextMove;
+    */
+
+    
+}
+
+Move *Player::heuristic()
+{
     std::vector<Move*> moves;
 
     for (int i = 0; i < 8; i++) {
@@ -104,15 +119,4 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 
     gameboard->doMove(bestMove, s);
     return bestMove;
-
-
-    /* does random move:
-    Move *nextMove = gameboard->randMove(s);
-
-    gameboard->doMove(nextMove, s);
-
-    return nextMove;
-    */
-
-    
 }
