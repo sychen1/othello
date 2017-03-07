@@ -21,7 +21,9 @@ public:
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;
     Board *gameboard;
+    // The player's own side
     Side s;
+    // The other player's side
     Side other;
 };
 
