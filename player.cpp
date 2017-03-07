@@ -64,18 +64,36 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             }
         }
     }
+    if (moves.empty())
+    {
+        return nullptr;
+    }
 
 
     Move *bestMove;
-    int bestMove_count = -64;
+    int bestMove_count = -65;
     for (int i = 0; i < (int) moves.size(); i++)
     {
         Board *testboard = gameboard->copy();
         testboard->doMove(moves[i], s);
-        if (testboard->count(s) > bestMove_count)
+        int curr_count = testboard->count(s);
+        if (((moves[i]->x == 7) || (moves[i]->x == 0)) && ((moves[i]->y == 0) || (moves[i]->y == 7)))
+        {
+            curr_count += 3;
+        }
+        else if ((moves[i]->x == 7) || (moves[i]->x == 0) || (moves[i]->y == 0) || (moves[i]->y == 7))
+        {
+            curr_count += 2;
+        }
+        else if ((moves[i]->x == 6) || (moves[i]->x == 1) || (moves[i]->y == 6) || (moves[i]->y == 1))
+        {
+            curr_count -= 3;
+        }
+        
+        if (curr_count > bestMove_count)
         {
             bestMove = moves[i];
-            bestMove_count = testboard->count(s);
+            bestMove_count = curr_count;
         }
     }
 
