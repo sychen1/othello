@@ -28,6 +28,7 @@ Player::Player(Side side) {
 Player::~Player() {
 }
 
+	delete gameboard;
 /*
  * Compute the next move given the opponent's last move. Your AI is
  * expected to keep track of the board on its own. If this is the first move,
