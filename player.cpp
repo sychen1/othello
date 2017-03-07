@@ -53,68 +53,69 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 
     gameboard->doMove(opponentsMove, other);
 
-    return heuristic();
+    return doMinimax();
+    //return heuristic();
+    //return random();
 }
 
-Move *Player::minimax(Board *board, Side side)
+Move *Player::doMinimax()
 {
-    std::vector<Move*> moves;
+    int bestCount = -65;
+    Move *bestMove = nullptr;
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             Move *move = new Move(i, j);
-            if (gameboard->checkMove(move, side))
+            if (gameboard->checkMove(move, s))
             {
-                moves.push_back(move);
+                int curr_count = minimax(gameboard, s, move);
+                if (curr_count > bestCount)
+                {
+                    bestCount = curr_count;
+                    bestMove = move;
+                }
             }
         }
     }
-    if (moves.empty())
-    {
-        return nullptr;
-    }
+    gameboard->doMove(bestMove, s);
+    return bestMove;
+}
 
-    Move *bestMove;
+int Player::minimax(Board *board, Side side, Move *move)
+{
+    
+    Board *testboard = gameboard->copy();
+    testboard->doMove(move, side);
+    int bestCount = 65;;
 
     if (side == s)
     {
-        bestCount = -65;
-        for (int i = 0; i < (int) moves.size(); i++) 
-        {
-            Board *testboard = gameboard->copy();
-            testboard->doMove(moves[i], s);
-
-            *bestMove = minimax(testboard, other);
-            
-            int curr_count = testboard->count(s) - testboard->count(other);
-            if (curr_count > bestMove_count)
-            {
-                bestMove = moves[i];
-                bestMove_count = curr_count;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Move *move = new Move(i, j);
+                if (testboard->checkMove(move, other))
+                {
+                    int currCount = minimax(testboard, other, move);
+                    if (currCount < bestCount)
+                    {
+                        bestCount = currCount;
+                    }
+                }
             }
-
         }
+
+        
 
     }
 
     else
     {
-        bestCount = 65; 
-        for (int i = 0; i < (int) moves.size(); i++) 
-        {
-            Board *testboard = gameboard->copy();
-            testboard->doMove(moves[i], other);
 
-            int curr_count = testboard->count(s) - testboard->count(other);
-            if (curr_count < bestMove_count)
-            {
-                bestMove = moves[i];
-                bestMove_count = curr_count;
-            }
-
-        }
+        bestCount = testboard->count(s) - testboard->count(other);
 
     }
+    return bestCount;
+
 }
 
 Move *Player::heuristic()
@@ -172,7 +173,7 @@ Move *Player::heuristic()
     return bestMove;
 }
 
-Move *Player::random();
+Move *Player::random()
 {
     Move *nextMove = gameboard->randMove(s);
 
