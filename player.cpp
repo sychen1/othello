@@ -49,12 +49,48 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
+
     Side other = (s == BLACK) ? WHITE : BLACK;
     gameboard->doMove(opponentsMove, other);
 
+    std::vector<Move*> moves;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            Move *move = new Move(i, j);
+            if (gameboard->checkMove(move, s))
+            {
+                moves.push_back(move);
+            }
+        }
+    }
+
+
+    Move *bestMove;
+    int bestMove_count = -64;
+    for (int i = 0; i < (int) moves.size(); i++)
+    {
+        Board *testboard = gameboard->copy();
+        testboard->doMove(moves[i], s);
+        if (testboard->count(s) > bestMove_count)
+        {
+            bestMove = moves[i];
+            bestMove_count = testboard->count(s);
+        }
+    }
+
+
+    gameboard->doMove(bestMove, s);
+    return bestMove;
+
+
+    /* does random move:
     Move *nextMove = gameboard->randMove(s);
 
     gameboard->doMove(nextMove, s);
 
     return nextMove;
+    */
+
+    
 }
