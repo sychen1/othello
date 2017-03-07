@@ -54,8 +54,67 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     gameboard->doMove(opponentsMove, other);
 
     return heuristic();
+}
 
-    
+Move *Player::minimax(Board *board, Side side)
+{
+    std::vector<Move*> moves;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            Move *move = new Move(i, j);
+            if (gameboard->checkMove(move, side))
+            {
+                moves.push_back(move);
+            }
+        }
+    }
+    if (moves.empty())
+    {
+        return nullptr;
+    }
+
+    Move *bestMove;
+
+    if (side == s)
+    {
+        bestCount = -65;
+        for (int i = 0; i < (int) moves.size(); i++) 
+        {
+            Board *testboard = gameboard->copy();
+            testboard->doMove(moves[i], s);
+
+            *bestMove = minimax(testboard, other);
+            
+            int curr_count = testboard->count(s) - testboard->count(other);
+            if (curr_count > bestMove_count)
+            {
+                bestMove = moves[i];
+                bestMove_count = curr_count;
+            }
+
+        }
+
+    }
+
+    else
+    {
+        bestCount = 65; 
+        for (int i = 0; i < (int) moves.size(); i++) 
+        {
+            Board *testboard = gameboard->copy();
+            testboard->doMove(moves[i], other);
+
+            int curr_count = testboard->count(s) - testboard->count(other);
+            if (curr_count < bestMove_count)
+            {
+                bestMove = moves[i];
+                bestMove_count = curr_count;
+            }
+
+        }
+
+    }
 }
 
 Move *Player::heuristic()
