@@ -81,15 +81,19 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         {
             curr_count += 3;
         }
+        else if ((((moves[i]->x == 7) || (moves[i]->x == 0)) && ((moves[i]->y == 1) || (moves[i]->y == 6))) || (((moves[i]->x == 1) || (moves[i]->x == 6)) && ((moves[i]->y == 0) || (moves[i]->y == 7))))
+        {
+            curr_count -= 2;
+        }
         else if ((moves[i]->x == 7) || (moves[i]->x == 0) || (moves[i]->y == 0) || (moves[i]->y == 7))
         {
             curr_count += 2;
         }
-        else if ((moves[i]->x == 6) || (moves[i]->x == 1) || (moves[i]->y == 6) || (moves[i]->y == 1))
+        else if (((moves[i]->x == 6) || (moves[i]->x == 1)) && ((moves[i]->y == 6) || (moves[i]->y == 1)))
         {
             curr_count -= 3;
         }
-        
+
         if (curr_count > bestMove_count)
         {
             bestMove = moves[i];
