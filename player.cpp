@@ -55,14 +55,6 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
 
     return heuristic();
 
-    /* does random move:
-    Move *nextMove = gameboard->randMove(s);
-
-    gameboard->doMove(nextMove, s);
-
-    return nextMove;
-    */
-
     
 }
 
@@ -119,4 +111,13 @@ Move *Player::heuristic()
 
     gameboard->doMove(bestMove, s);
     return bestMove;
+}
+
+Move *Player::random();
+{
+    Move *nextMove = gameboard->randMove(s);
+
+    gameboard->doMove(nextMove, s);
+
+    return nextMove;
 }
