@@ -57,22 +57,24 @@ bool Board::isDone() {
 /*
  * Returns all the legal moves for the given side.
  */
-vector<Move> Board::allMoves(Side side) {
-    std::vector<Move> possible;
+Move* Board::randMove(Side side) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            Move move(i, j);
-            if (checkMove(&move, side))
+            Move *check = new Move(i, j);
+            if (checkMove(check, side))
             {
-                possible.push_back(move);
+                return check;
             }
         }
     }
-    return possible;
+    
+    return nullptr;
 }
 
-Move *Board::randMove(Side side) {
+/*Move *Board::randMove(Side side) {
+    
     std::vector<Move> possible = allMoves(side);
+    std::cerr << "Got all moves" << std::endl;
     if (possible.empty())
     {
         return nullptr;
@@ -82,7 +84,10 @@ Move *Board::randMove(Side side) {
         int rand_move = rand() % possible.size();
         return &possible[rand_move];
     }
+    
+    return nullptr;
 }
+*/
 
 /*
  * Returns true if there are legal moves for the given side.
