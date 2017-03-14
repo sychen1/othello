@@ -8,4 +8,4 @@ In the second week, Sophia implemented the alpha beta pruning function and Karen
 
 Q: Document the improvements that your group made to your AI to make it tournament-worthy. Explain why you think your strategy(s) will work. Feel free to discuss any ideas were tried but didn't work out.
 
-A: After the first week, we had a working heuristic function good enough to beat SimplePlayer. But we could not get our minimax to work properly as it was generally losing to SimplePlayer. 
+A: After the first week, we had a working heuristic function good enough to beat SimplePlayer. But we could not get our minimax to work properly as it was generally losing to SimplePlayer. For this week, we tried to implement alpha-beta pruning but for some reason it was seg-faulting after making a single move. So for the tournament we will be using our heuristic function; we believe it will do considerably well as it beat SimplePlayer 10/10 times and though it looks only one move ahead, it assigns weights to certain squares which prevents it from making a particularly dangerous move. 
