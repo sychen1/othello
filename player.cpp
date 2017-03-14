@@ -48,24 +48,27 @@ Player::~Player() {
  * return nullptr.
  *
  * NOTE: to select the method of making a move, it must be uncommented and the
- * other two methods must be commented out.
+ * other methods must be commented out.
  */
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
 
     //adds opponent's move to gameboard
     gameboard->doMove(opponentsMove, other);
-    std::cerr << "did opponents move" << std::endl;
 
-    std::cerr << "testing alphabeta" << std::endl;
     Move* bestMove = nullptr;
-    bestMove = doAlphaBeta();
+    //bestMove = doAlphaBeta();
+    //bestMove = doMinimax();
+    //bestMove = random();
+    bestMove = heuristic();
+    //bestMove = iterDeepening(msLeft);
 
-    //return doMinimax();
     gameboard->doMove(bestMove, s);
     return bestMove;
-    //return random();
 }
 
+/*
+ * Compute's next move using iterative deepening on alpha beta
+ */
 Move *Player::iterDeepening(int msLeft)
 {
     Move *bestMove = nullptr;
@@ -94,6 +97,9 @@ Move *Player::iterDeepening(int msLeft)
     }
 }
 
+/*
+ * Compute's next move using alpha beta with iterative deepening
+ */
 Move* Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, int& returned, Move* makeMove, int depth)
 {
     //create copy of gameboard and test given move
@@ -144,11 +150,14 @@ Move* Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, 
 }
 
 /*
- * Compute's next move using minimax
+ * Compute's next move using alpha beta without iterative deepening
+ * NOTE: only works for certain "first moves" if playing against a human, 
+ *  usually segfaults
  */
 
 Move *Player::doAlphaBeta()
 {
+    // initialize alpha and beta
     int alpha = -65;
     int beta = 65;
     Move *bestMove = nullptr;
@@ -159,30 +168,29 @@ Move *Player::doAlphaBeta()
             Move *move = new Move(i, j);
             if (gameboard->checkMove(move, s))
             {
-                //calculate which move has the highest score
+                //calculate which move has the best alpha-beta score
                 int curr_count = alphaBeta(gameboard, s, other, alpha, beta, move);
+                //check if we have a better move
                 if (curr_count > alpha)
                 {
                     alpha = curr_count;
                     bestMove = move;
                 }
+                //check if we have a worse move and should stop checking this branch
                 if (curr_count >= beta)
                 {
-                    bestMove = gameboard->randMove(s);
-                    //gameboard->doMove(bestMove, s);
                     return bestMove;
                 }
             }
         }
     }
 
-    //adds and returns best move
-    //gameboard->doMove(bestMove, s);
+    //returns best move
     return bestMove;
 }
 
 /*
- * Compute's best integer score of a move for minimax
+ * Compute's best integer score of a move for alpha beta
  */
 
 int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Move* makeMove)
@@ -190,6 +198,8 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
     //create copy of gameboard and test given move
     Board *testboard = gameboard->copy();
     testboard->doMove(makeMove, side);
+
+    // if we have reached the end of the game, return the count
     if (testboard->isDone())
     {
 
@@ -197,7 +207,7 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
         return returned;
     }
     
-    //if given move is player's own move
+    //check all the opponent's moves and call alpha beta on them
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
 
@@ -205,10 +215,12 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
             if (testboard->checkMove(move, other))
             {
                 int currCount = alphaBeta(testboard, other, side, -beta, -alpha, move);
+                // check if we have a better move
                 if (currCount > alpha)
                 {
                     alpha = currCount;
                 }
+                // check if we cannot do any better
                 if (currCount >= beta)
                 {
                     return beta;
@@ -222,62 +234,7 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
 }
     
 
-/*
- * Compute's best integer score of a move for alpha-beta
- */
 
-/*Move* Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, int& returned, Move* makeMove)
-{
-    //create copy of gameboard and test given move
-    Board *testboard = board->copy();
-    if (makeMove != nullptr)
-    {
-        std::cerr << "making move " << makeMove->x << ", " << makeMove->y << std::endl;
-        testboard->doMove(makeMove, side);
-        std::cerr << "Move is valid: " << testboard->checkMove(makeMove, side);
-    }
-
-    Move *best;
-
-    std::cerr << "amount of black stones is " << testboard->countBlack() << std::endl;
-    std::cerr << "amount of white stones is " << testboard->countWhite() << std::endl;
-    if (testboard->isDone())
-    {
-
-        returned = testboard->count(side) - testboard->count(opp);
-        std::cerr << "reached end, returning " << returned << std::endl;
-        return nullptr;
-    }
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            Move *move = new Move(i, j);
-            if (testboard->checkMove(move, side))
-            {
-                //calculate which move has the highest score
-                int score = testboard->count(side) - testboard->count(opp);
-                std::cerr << "another alpha beta" << std::endl;
-                std::cerr << "beta is " << beta << std::endl;
-                std::cerr << "alpha is " << alpha << std::endl;
-                std::cerr << "score is " << score << std::endl;
-                alphaBeta(testboard, opp, side, -beta, -alpha, score, move);
-                score = -score;
-                if (score > alpha)
-                {
-                    alpha = score;
-                    best = move;
-                }
-                if (score >= beta)
-                {
-                    returned = beta;
-                    return move;
-                }
-            }
-        }
-    }
-    returned = alpha;
-    return best;
-
-}*/
 
 /*
  * Compute's next move using minimax
