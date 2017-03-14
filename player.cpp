@@ -61,6 +61,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
     bestMove = doAlphaBeta();
 
     //return doMinimax();
+    gameboard->doMove(bestMove, s);
     return bestMove;
     //return random();
 }
@@ -101,17 +102,20 @@ Move* Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, 
 
     if ((testboard->isDone()) && (depth == 0))
     {
+        
         returned = testboard->count(side) - testboard->count(opp);
         return nullptr;
     }
     else if (depth > 0)
     {
+
         Move* best = nullptr;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Move *move = new Move(i, j);
                 if (testboard->checkMove(move, side))
                 {
+
                     //calculate which move has the highest score
                     int score;
                     alphaBeta(testboard, opp, side, -beta, -alpha, score, move, depth - 1);
@@ -164,7 +168,9 @@ Move *Player::doAlphaBeta()
                 }
                 if (curr_count >= beta)
                 {
-                    return gameboard->randMove(s);
+                    bestMove = gameboard->randMove(s);
+                    //gameboard->doMove(bestMove, s);
+                    return bestMove;
                 }
             }
         }
@@ -184,7 +190,7 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
     //create copy of gameboard and test given move
     Board *testboard = gameboard->copy();
     testboard->doMove(makeMove, side);
-
+    std::cerr << "hello1" << std::endl;
     if (testboard->isDone())
     {
 
@@ -195,9 +201,11 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
     //if given move is player's own move
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
+
             Move *move = new Move(i, j);
             if (testboard->checkMove(move, other))
             {
+                std::cerr << "hello2" << std::endl;
                 int currCount = alphaBeta(testboard, other, side, -beta, -alpha, move);
                 if (currCount > alpha)
                 {
@@ -417,7 +425,7 @@ Move *Player::heuristic()
     }
 
     //adds and returns best move
-    gameboard->doMove(bestMove, s);
+    //gameboard->doMove(bestMove, s);
     return bestMove;
 }
 
