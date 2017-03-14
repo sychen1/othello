@@ -190,7 +190,6 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
     //create copy of gameboard and test given move
     Board *testboard = gameboard->copy();
     testboard->doMove(makeMove, side);
-    std::cerr << "hello1" << std::endl;
     if (testboard->isDone())
     {
 
@@ -205,7 +204,6 @@ int Player::alphaBeta(Board *board, Side side, Side opp, int alpha, int beta, Mo
             Move *move = new Move(i, j);
             if (testboard->checkMove(move, other))
             {
-                std::cerr << "hello2" << std::endl;
                 int currCount = alphaBeta(testboard, other, side, -beta, -alpha, move);
                 if (currCount > alpha)
                 {
